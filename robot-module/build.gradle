@@ -26,7 +26,7 @@ android {
     }
 }
 
-apply from: '../build.dependencies.gradle'
+apply from: "$rootDir/build.dependencies.gradle"
 
 dependencies {
     // For :robot-module:testDebugUnitTest (ReplaySampleToBytesTest, JUnit 4 —
