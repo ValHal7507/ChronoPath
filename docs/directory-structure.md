@@ -11,11 +11,14 @@ It deliberately does **not** restate any byte-level format detail —
 truth for every constant's value. This file only says where the copies
 live and how they are kept in sync.
 
-**Out of scope:** the pre-existing TeamCode modules in this repository
-(unrelated to the replay system). This document neither describes nor
-restructures them. The one deliberate contact point is Phase 1 Task 9,
-where the recorder is called from a single existing OpMode — that
-integration is specified in `docs/Plan.md`, not here.
+**Out of scope:** the pre-existing TeamCode modules in the host FTC
+TeamCode repository (external to this repo — see the repo-boundary
+section below; unrelated to the replay system). This document neither
+describes nor restructures them. The one deliberate contact point is
+Phase 1 Task 9, where the recorder is called from a single existing
+OpMode — that OpMode lives in `TeamCode/` of the host repo, i.e. in a
+*different repository*, not merely a different folder; the integration
+is specified in `docs/Plan.md`, not here.
 
 ---
 
@@ -30,6 +33,73 @@ They share **nothing at build time** — no common Gradle module, no code
 generation, no copied source. The only thing they share is the _contract_
 described in `docs/replay-format-spec.md`, transcribed by hand into one
 constants file per subproject (§2 below).
+
+---
+
+## Repo boundary — ChronoPath is its own repository
+
+ChronoPath is a **standalone git repository**, not a folder inside a
+single FTC monorepo. Its own root contains exactly the layout §4
+describes — `docs/`, `robot-module/`, and (eventually) `replay-app/` —
+and every path in this document is relative to *that* root, never to
+another repository's root.
+
+ChronoPath is consumed by the separate **FTC TeamCode repository**
+(Team-19084-Zenith-Tests), which is external to this repo, as a **git
+submodule mounted at `chronopath/`** inside it.
+
+### The wiring contract (host repo side)
+
+For `:robot-module` to participate in the host build, the host repo's
+`settings.gradle` must contain these exact lines:
+
+```gradle
+include ':robot-module'
+project(':robot-module').projectDir = new File(rootDir, 'chronopath/robot-module')
+```
+
+and its `TeamCode/build.gradle` must depend on the module:
+
+```gradle
+implementation project(':robot-module')
+```
+
+The `projectDir` remap is what actually relocates `:robot-module` from
+the host repo's root down into the submodule — written as
+`new File(rootDir, 'chronopath/robot-module')`, resolved against the
+host build's root, not as a bare relative path. This is the wiring as
+built and verified end-to-end (`:robot-module:assembleDebug`,
+`:robot-module:testDebugUnitTest`, `:TeamCode:assembleDebug`).
+
+### `$rootDir` in robot-module/build.gradle means the host root
+
+`robot-module/build.gradle` (a file inside this repo) contains:
+
+```gradle
+apply from: "$rootDir/build.dependencies.gradle"
+```
+
+**`$rootDir` here resolves to the HOST repo's root, not ChronoPath's
+own root.** Gradle's `rootDir` is the root of the Gradle build whose
+`settings.gradle` includes the module — and that build starts in the
+host repo, because it is the host's `settings.gradle` that includes
+`:robot-module`. So `build.dependencies.gradle` must be provided by the
+host repo at its root; it is not (and need not be) present in
+ChronoPath.
+
+This line is therefore **not a bug and the path is not wrong**. What it
+does mean is that **`robot-module` is not a fully standalone Gradle
+module**: it cannot build by itself and is only buildable when consumed
+by a host repo that supplies `build.dependencies.gradle` at its root.
+
+### OpMode integration happens outside this repo (Plan Task 9)
+
+The OpMode that will eventually call `ReplayRecorder` (Phase 1 Task 9)
+is a file in `TeamCode/` of the host FTC repo — **outside this
+repository entirely**, not merely outside `robot-module/`. That is why
+this document neither owns nor describes that file's content (it stays
+out of scope per the "Out of scope" note above): the file lives in a
+different repo, not just a different folder.
 
 ---
 
@@ -139,7 +209,8 @@ robot-module/
 - **OpMode integration point (Phase 1 Task 9):** lives _outside_ this
   tree, in one pre-existing OpMode — the recorder classes above are
   called from it; the OpMode itself is not part of `robot-module/` and
-  is out of scope for this document.
+  is out of scope for this document (it lives in another repository —
+  `TeamCode/` in the host FTC repo; see the repo-boundary section).
 - On-robot smoke check (Phase 1 Task 10) verifies the saved file against
   the size arithmetic stated in the spec — no new code paths here.
 
