@@ -1,0 +1,35 @@
+//
+// build.gradle in robot-module — ChronoPath robot-side recorder (Task 7.5)
+//
+// Android library module (NOT plain java-library): build.dependencies.gradle
+// declares androidx.appcompat, which is an AAR and therefore requires an
+// Android plugin. Mirrors FtcRobotController/build.gradle's pattern.
+//
+// Values match TeamCode exactly (from build.common.gradle): compileSdk 34,
+// minSdkVersion 24, Java 8 source/targetCompatibility.
+//
+
+apply plugin: 'com.android.library'
+
+android {
+    namespace = 'org.firstinspires.ftc.teamcode.replay'
+
+    compileSdk 34
+
+    defaultConfig {
+        minSdkVersion 24
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+}
+
+apply from: '../build.dependencies.gradle'
+
+dependencies {
+    // For :robot-module:testDebugUnitTest (ReplaySampleToBytesTest, JUnit 4 —
+    // same version Task 6 used standalone). build.dependencies.gradle has none.
+    testImplementation 'junit:junit:4.13.2'
+}

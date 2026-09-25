@@ -1,0 +1,16 @@
+-- Merging decision tree log ---
+manifest
+ADDED from /home/val3nt_n/FTC/Team-19084-Zenith-Tests/robot-module/build/intermediates/tmp/ProcessLibraryManifest/debug/tempAndroidManifest14662189680799585565.xml:2:13-83
+INJECTED from /home/val3nt_n/FTC/Team-19084-Zenith-Tests/robot-module/build/intermediates/tmp/ProcessLibraryManifest/debug/tempAndroidManifest14662189680799585565.xml:2:13-83
+	package
+		INJECTED from /home/val3nt_n/FTC/Team-19084-Zenith-Tests/robot-module/build/intermediates/tmp/ProcessLibraryManifest/debug/tempAndroidManifest14662189680799585565.xml
+	xmlns:android
+		ADDED from /home/val3nt_n/FTC/Team-19084-Zenith-Tests/robot-module/build/intermediates/tmp/ProcessLibraryManifest/debug/tempAndroidManifest14662189680799585565.xml:2:23-81
+uses-sdk
+INJECTED from /home/val3nt_n/FTC/Team-19084-Zenith-Tests/robot-module/build/intermediates/tmp/ProcessLibraryManifest/debug/tempAndroidManifest14662189680799585565.xml reason: use-sdk injection requested
+INJECTED from /home/val3nt_n/FTC/Team-19084-Zenith-Tests/robot-module/build/intermediates/tmp/ProcessLibraryManifest/debug/tempAndroidManifest14662189680799585565.xml
+INJECTED from /home/val3nt_n/FTC/Team-19084-Zenith-Tests/robot-module/build/intermediates/tmp/ProcessLibraryManifest/debug/tempAndroidManifest14662189680799585565.xml
+	android:targetSdkVersion
+		INJECTED from /home/val3nt_n/FTC/Team-19084-Zenith-Tests/robot-module/build/intermediates/tmp/ProcessLibraryManifest/debug/tempAndroidManifest14662189680799585565.xml
+	android:minSdkVersion
+		INJECTED from /home/val3nt_n/FTC/Team-19084-Zenith-Tests/robot-module/build/intermediates/tmp/ProcessLibraryManifest/debug/tempAndroidManifest14662189680799585565.xml
